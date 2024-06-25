@@ -11,7 +11,7 @@ int main()
     auto& platform = core::PlatformInstance::instance();
     auto& window   = core::WindowInstance::instance();
 
-    const base::window_config config { "opengl", { 1024, 768 } };
+    const base::window_config config { "vertex buffer", { 1024, 768 } };
     const auto factory = core::PlatformFactory::create_factory();
 
     platform.init(factory);
