@@ -1,12 +1,25 @@
-#include "glfw/platform.hpp"
+#include "window_instance.hpp"
+#include "platform_instance.hpp"
 
-int32_t main()
+int main()
 {
-    glfw::Platform platform;
+    auto& platform = core::PlatformInstance::instance();
+    auto& window   = core::WindowInstance::instance();
 
-    platform.init();
-    platform.update();
+    const base::window_config config { "window", { 1024, 768 } };
+    const auto factory = core::PlatformFactory::create_factory();
+
+    platform.init(factory);
+    window.create(factory, config);
+
+    while (window.is_active())
+    {
+        window.update();
+        platform.update();
+    }
+
+    window.destroy();
     platform.release();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
