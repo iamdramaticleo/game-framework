@@ -1,4 +1,4 @@
-project(graphics_vertex_buffer)
+project(graphics_shaders)
 
 add_executable(${PROJECT_NAME})
 
