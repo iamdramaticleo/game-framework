@@ -11,6 +11,7 @@
 
 #include "math/vec3.hpp"
 
+#include "geometry.hpp"
 #include "file.hpp"
 
 int main()
@@ -46,12 +47,7 @@ int main()
     vert_stage.destroy();
     frag_stage.destroy();
 
-    const std::vector<math::vec3> vertices
-    {
-        { -0.5f, -0.5f, 0.0f },
-        {  0.5f, -0.5f, 0.0f },
-        {  0.0f,  0.5f, 0.0f }
-    };
+    auto [vertices, indices] = core::Geometry::create_plane();
 
     gl::VertexArray vertex_array;
     vertex_array.create();
@@ -61,6 +57,11 @@ int main()
     vertices_buffer.create();
     vertices_buffer.bind(gl::ARRAY_BUFFER);
     vertices_buffer.data(base::buffer_data::create_from_buffer(vertices), gl::STATIC_DRAW);
+
+    gl::Buffer indices_buffer;
+    indices_buffer.create();
+    indices_buffer.bind(gl::ELEMENT_ARRAY_BUFFER);
+    indices_buffer.data(base::buffer_data::create_from_buffer(indices), gl::STATIC_DRAW);
 
     vertex_array.attribute({ 0, 3, gl::FLOAT, 0 }, sizeof(math::vec3));
 
@@ -74,13 +75,14 @@ int main()
         shader.bind();
 
         vertex_array.bind();
-        gl::Commands::draw_arrays(gl::TRIANGLES, vertices.size());
+        gl::Commands::draw_elements(gl::TRIANGLES, indices.size());
 
         window.update();
         platform.update();
     }
 
     vertices_buffer.destroy();
+    indices_buffer.destroy();
     vertex_array.destroy();
 
     shader.destroy();
