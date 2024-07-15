@@ -8,18 +8,18 @@
 
 int32_t main()
 {
-    auto& window = WindowInstance::instance();
-          window.create(PlatformModule::create_factory(), { "window", 1024, 768 });
+    auto& window =      core::WindowInstance::instance();
+          window.create(core::PlatformModule::create_factory(), { "window", 1024, 768 });
 
     gl::Functions::load();
 
-    gl::Pipeline::enable(gl::DEPTH_TEST);
-    gl::Pipeline::enable(gl::MULTISAMPLE);
+    gl::Pipeline::enable(gl::depth_test);
+    gl::Pipeline::enable(gl::multisample);
 
     while (window.is_active())
     {
         gl::Commands::clear(0.5f, 0.5f, 0.5f);
-        gl::Commands::clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+        gl::Commands::clear(gl::color_buffer_bit | gl::depth_buffer_bit);
 
         window.update();
     }
