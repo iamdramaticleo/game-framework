@@ -13,8 +13,6 @@
     - Time
 
 - Graphics
-    - Shaders - **in progress**
-    - Index   Buffer
     - Uniform Buffer
     - Transformations
     - Textures

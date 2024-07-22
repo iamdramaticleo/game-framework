@@ -9,6 +9,7 @@
 #include <opengl/macros.hpp>
 #include <opengl/shader.hpp>
 
+#include <geometry.hpp>
 #include <file.hpp>
 
 #include <vec3.hpp>
@@ -17,7 +18,7 @@
 int32_t main()
 {
     auto& window =      core::WindowInstance::instance();
-          window.create(core::PlatformModule::create_factory(), { "shaders", 1024, 768 });
+          window.create(core::PlatformModule::create_factory(), { "index buffer", 1024, 768 });
 
     gl::Functions::load();
 
@@ -41,12 +42,7 @@ int32_t main()
     vert_stage.destroy();
     frag_stage.destroy();
 
-    const std::vector<core::vec3> vertices
-    {
-        { -0.5f, -0.5f, 0.0f },
-        {  0.5f, -0.5f, 0.0f },
-        {  0.0f,  0.5f, 0.0f }
-    };
+    auto [vertices, indices] = core::Geometry::create_plane();
 
     gl::VertexArray vertex_array;
     vertex_array.create();
@@ -56,6 +52,11 @@ int32_t main()
     vertices_buffer.create();
     vertices_buffer.bind(gl::array_buffer);
     vertices_buffer.data(base::buffer_data::create_from_buffer(vertices), gl::static_draw);
+
+    gl::Buffer indices_buffer;
+    indices_buffer.create();
+    indices_buffer.bind(gl::element_array_buffer);
+    indices_buffer.data(base::buffer_data::create_from_buffer(indices), gl::static_draw);
 
     vertex_array.attribute({ 0, 3, gl::type_float, 0 }, sizeof(core::vec3));
 
@@ -73,11 +74,12 @@ int32_t main()
         shader.push(0, color);
 
         vertex_array.bind();
-        gl::Commands::draw_arrays(gl::triangles, vertices.size());
+        gl::Commands::draw_elements(gl::triangles, indices.size());
 
         window.update();
     }
 
+    indices_buffer.destroy();
     vertices_buffer.destroy();
     vertex_array.destroy();
 
