@@ -17,23 +17,23 @@
 
 int32_t main()
 {
-    auto& window =      core::WindowInstance::instance();
-          window.create(core::PlatformModule::create_factory(), { "index buffer", 1024, 768 });
+    auto& window = core::WindowInstance::instance();
+     window.create(core::PlatformModule::create_factory(), { "index buffer", 1024, 768 });
 
-    gl::Functions::load();
+    core::gl::Functions::load();
 
     const auto vert_stage_data = core::File::read("diffuse_vert.spv", std::ios::binary);
     const auto frag_stage_data = core::File::read("diffuse_frag.spv", std::ios::binary);
 
-    gl::ShaderStage vert_stage { gl::vertex_shader };
+    core::gl::ShaderStage vert_stage { core::gl::vertex_shader };
     vert_stage.create();
     vert_stage.source(vert_stage_data);
 
-    gl::ShaderStage frag_stage { gl::fragment_shader };
+    core::gl::ShaderStage frag_stage { core::gl::fragment_shader };
     frag_stage.create();
     frag_stage.source(frag_stage_data);
 
-    gl::Shader shader;
+    core::gl::Shader shader;
     shader.create();
     shader.attach(vert_stage);
     shader.attach(frag_stage);
@@ -44,37 +44,37 @@ int32_t main()
 
     auto [vertices, indices] = core::Geometry::create_plane();
 
-    gl::VertexArray vertex_array;
+    core::gl::VertexArray vertex_array;
     vertex_array.create();
     vertex_array.bind();
 
-    gl::Buffer vertices_buffer;
+    core::gl::Buffer vertices_buffer;
     vertices_buffer.create();
-    vertices_buffer.bind(gl::array_buffer);
-    vertices_buffer.data(base::buffer_data::create_from_buffer(vertices), gl::static_draw);
+    vertices_buffer.bind(core::gl::array_buffer);
+    vertices_buffer.data(core::base::buffer_data::create_from_buffer(vertices), core::gl::static_draw);
 
-    gl::Buffer indices_buffer;
+    core::gl::Buffer indices_buffer;
     indices_buffer.create();
-    indices_buffer.bind(gl::element_array_buffer);
-    indices_buffer.data(base::buffer_data::create_from_buffer(indices), gl::static_draw);
+    indices_buffer.bind(core::gl::element_array_buffer);
+    indices_buffer.data(core::base::buffer_data::create_from_buffer(indices), core::gl::static_draw);
 
-    vertex_array.attribute({ 0, 3, gl::type_float, 0 }, sizeof(core::vec3));
+    vertex_array.attribute({ 0, 3, core::gl::type_float, 0 }, sizeof(core::vec3));
 
-    gl::Pipeline::enable(gl::depth_test);
-    gl::Pipeline::enable(gl::multisample);
+    core::gl::Pipeline::enable(core::gl::depth_test);
+    core::gl::Pipeline::enable(core::gl::multisample);
 
     constexpr core::rgb color { 0.8, 0.4, 0.2 };
 
     while (window.is_active())
     {
-        gl::Commands::clear(0.5f, 0.5f, 0.5f);
-        gl::Commands::clear(gl::color_buffer_bit | gl::depth_buffer_bit);
+        core::gl::Commands::clear(0.5f, 0.5f, 0.5f);
+        core::gl::Commands::clear(core::gl::color_buffer_bit | core::gl::depth_buffer_bit);
 
         shader.bind();
         shader.push(0, color);
 
         vertex_array.bind();
-        gl::Commands::draw_elements(gl::triangles, indices.size());
+        core::gl::Commands::draw_elements(core::gl::triangles, indices.size());
 
         window.update();
     }

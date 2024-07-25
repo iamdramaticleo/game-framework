@@ -9,7 +9,9 @@
 #include <opengl/macros.hpp>
 #include <opengl/shader.hpp>
 
+#include <geometry.hpp>
 #include <file.hpp>
+#include <time.hpp>
 
 #include <vec3.hpp>
 #include <rgb.hpp>
@@ -17,7 +19,7 @@
 int32_t main()
 {
     auto& window = core::WindowInstance::instance();
-     window.create(core::PlatformModule::create_factory(), { "shaders", 1024, 768 });
+     window.create(core::PlatformModule::create_factory(), { "uniform buffer", 1024, 768 });
 
     core::gl::Functions::load();
 
@@ -41,12 +43,7 @@ int32_t main()
     vert_stage.destroy();
     frag_stage.destroy();
 
-    const std::vector<core::vec3> vertices
-    {
-        { -0.5f, -0.5f, 0.0f },
-        {  0.5f, -0.5f, 0.0f },
-        {  0.0f,  0.5f, 0.0f }
-    };
+    auto [vertices, indices] = core::Geometry::create_plane();
 
     core::gl::VertexArray vertex_array;
     vertex_array.create();
@@ -57,12 +54,25 @@ int32_t main()
     vertices_buffer.bind(core::gl::array_buffer);
     vertices_buffer.data(core::base::buffer_data::create_from_buffer(vertices), core::gl::static_draw);
 
+    core::gl::Buffer indices_buffer;
+    indices_buffer.create();
+    indices_buffer.bind(core::gl::element_array_buffer);
+    indices_buffer.data(core::base::buffer_data::create_from_buffer(indices), core::gl::static_draw);
+
     vertex_array.attribute({ 0, 3, core::gl::type_float, 0 }, sizeof(core::vec3));
 
     core::gl::Pipeline::enable(core::gl::depth_test);
     core::gl::Pipeline::enable(core::gl::multisample);
 
-    constexpr core::rgb color { 0.8, 0.4, 0.2 };
+    core::rgb color { 0.8, 0.0, 0.0 };
+
+    core::gl::Buffer material_ubo;
+    material_ubo.create();
+    material_ubo.bind(core::base::buffer_location::material);
+    material_ubo.data(core::base::buffer_data::create_from_data(&color), core::gl::dynamic_draw);
+
+    core::Time time;
+    time.init();
 
     while (window.is_active())
     {
@@ -70,16 +80,22 @@ int32_t main()
         core::gl::Commands::clear(core::gl::color_buffer_bit | core::gl::depth_buffer_bit);
 
         shader.bind();
-        shader.push(0, color);
+
+        color.r = 0.2f + (std::sinf(core::Time::total_time()) + 1.0f) * 0.4f;
+        material_ubo.sub_data(core::base::buffer_data::create_from_data(&color));
 
         vertex_array.bind();
-        core::gl::Commands::draw_arrays(core::gl::triangles, vertices.size());
+        core::gl::Commands::draw_elements(core::gl::triangles, indices.size());
 
+        time.update();
         window.update();
     }
 
+    indices_buffer.destroy();
     vertices_buffer.destroy();
     vertex_array.destroy();
+
+    material_ubo.destroy();
 
     shader.destroy();
 

@@ -12,10 +12,10 @@
 
 int32_t main()
 {
-    auto& window =      core::WindowInstance::instance();
-          window.create(core::PlatformModule::create_factory(), { "vertex buffer", 1024, 768 });
+    auto& window = core::WindowInstance::instance();
+     window.create(core::PlatformModule::create_factory(), { "vertex buffer", 1024, 768 });
 
-    gl::Functions::load();
+    core::gl::Functions::load();
 
     const std::vector<core::vec3> vertices
     {
@@ -24,27 +24,27 @@ int32_t main()
         {  0.0f,  0.5f, 0.0f }
     };
 
-    gl::VertexArray vertex_array;
+    core::gl::VertexArray vertex_array;
     vertex_array.create();
     vertex_array.bind();
 
-    gl::Buffer vertices_buffer;
+    core::gl::Buffer vertices_buffer;
     vertices_buffer.create();
-    vertices_buffer.bind(gl::array_buffer);
-    vertices_buffer.data(base::buffer_data::create_from_buffer(vertices), gl::static_draw);
+    vertices_buffer.bind(core::gl::array_buffer);
+    vertices_buffer.data(core::base::buffer_data::create_from_buffer(vertices), core::gl::static_draw);
 
-    vertex_array.attribute({ 0, 3, gl::type_float, 0 }, sizeof(core::vec3));
+    vertex_array.attribute({ 0, 3, core::gl::type_float, 0 }, sizeof(core::vec3));
 
-    gl::Pipeline::enable(gl::depth_test);
-    gl::Pipeline::enable(gl::multisample);
+    core::gl::Pipeline::enable(core::gl::depth_test);
+    core::gl::Pipeline::enable(core::gl::multisample);
 
     while (window.is_active())
     {
-        gl::Commands::clear(0.5f, 0.5f, 0.5f);
-        gl::Commands::clear(gl::color_buffer_bit | gl::depth_buffer_bit);
+        core::gl::Commands::clear(0.5f, 0.5f, 0.5f);
+        core::gl::Commands::clear(core::gl::color_buffer_bit | core::gl::depth_buffer_bit);
 
         vertex_array.bind();
-        gl::Commands::draw_arrays(gl::triangles, vertices.size());
+        core::gl::Commands::draw_arrays(core::gl::triangles, vertices.size());
 
         window.update();
     }

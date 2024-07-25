@@ -1,9 +1,9 @@
-project(graphics_index_buffer)
+project(index_buffer)
 
 add_executable(${PROJECT_NAME})
 
-set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_SOURCE_DIR}/build/engine/${PROJECT_NAME}"
-                                                 RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/build/engine/${PROJECT_NAME}")
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG   "${CMAKE_SOURCE_DIR}/build/engine/graphics/${PROJECT_NAME}"
+                                                 RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_SOURCE_DIR}/build/engine/graphics/${PROJECT_NAME}")
 
 target_link_libraries(${PROJECT_NAME}    PRIVATE tools)
 target_link_libraries(${PROJECT_NAME}    PRIVATE platform graphics resources math core)
