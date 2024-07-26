@@ -10,11 +10,8 @@
 
 - Platform
     - Input
-    - Time
 
 - Graphics
-    - Uniform Buffer
-    - Transformations
     - Textures
         - Sampler
     - Basic Materials
