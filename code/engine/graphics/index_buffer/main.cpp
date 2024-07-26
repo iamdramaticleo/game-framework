@@ -42,7 +42,7 @@ int32_t main()
     vert_stage.destroy();
     frag_stage.destroy();
 
-    auto [vertices, indices] = core::Geometry::create_plane();
+    auto [vertices, indices] = core::tools::Geometry::create_plane();
 
     core::gl::VertexArray vertex_array;
     vertex_array.create();

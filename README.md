@@ -27,7 +27,6 @@
     - Sprites
 
 - Lighting
-    - Diffuse  Lighting
     - Specular Lighting
     - Directional Light
     - Point Light

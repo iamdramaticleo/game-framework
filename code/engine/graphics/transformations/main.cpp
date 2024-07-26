@@ -43,7 +43,7 @@ int32_t main()
     vert_stage.destroy();
     frag_stage.destroy();
 
-    auto [vertices, indices] = core::Geometry::create_plane();
+    auto [vertices, indices] = core::tools::Geometry::create_plane();
 
     core::gl::VertexArray vertex_array;
     vertex_array.create();
@@ -91,11 +91,10 @@ int32_t main()
         core::gl::Commands::clear(0.5f, 0.5f, 0.5f);
         core::gl::Commands::clear(core::gl::color_buffer_bit | core::gl::depth_buffer_bit);
 
-        shader.bind();
-
         glm::mat4 model = glm::rotate(glm::mat4(1.0f), glm::radians(core::Time::total_time() * 50.0f), { 0.0f, 0.0f, 1.0f });
                   model = glm::scale(model, { 0.5f, 0.5f, 0.5f });
 
+        shader.bind();
         shader.push(0, glm::value_ptr(model));
 
         vertex_array.bind();

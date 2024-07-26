@@ -2,8 +2,7 @@
 
 layout (location = 0) in vec3 in_position;
 
-layout (location = 0) uniform mat4 u_model;
-
+layout (location = 0) uniform mat4    u_model;
 layout (binding  = 0, std140) uniform u_camera
 {
     mat4 view;
