@@ -9,11 +9,11 @@
 #include <opengl/macros.hpp>
 #include <opengl/shader.hpp>
 
+#include <math/vec3.hpp>
+#include <math/rgb.hpp>
+
 #include <geometry.hpp>
 #include <file.hpp>
-
-#include <vec3.hpp>
-#include <rgb.hpp>
 
 int32_t main()
 {
@@ -25,11 +25,11 @@ int32_t main()
     const auto vert_stage_data = core::File::read("diffuse_vert.spv", std::ios::binary);
     const auto frag_stage_data = core::File::read("diffuse_frag.spv", std::ios::binary);
 
-    core::gl::ShaderStage vert_stage { core::gl::vertex_shader };
+    core::gl::Stage vert_stage { core::gl::vertex_shader };
     vert_stage.create();
     vert_stage.source(vert_stage_data);
 
-    core::gl::ShaderStage frag_stage { core::gl::fragment_shader };
+    core::gl::Stage frag_stage { core::gl::fragment_shader };
     frag_stage.create();
     frag_stage.source(frag_stage_data);
 
@@ -51,19 +51,19 @@ int32_t main()
     core::gl::Buffer vertices_buffer;
     vertices_buffer.create();
     vertices_buffer.bind(core::gl::array_buffer);
-    vertices_buffer.data(core::base::buffer_data::create_from_buffer(vertices), core::gl::static_draw);
+    vertices_buffer.data(core::base::buffer_data::create_from(vertices), core::gl::static_draw);
 
     core::gl::Buffer indices_buffer;
     indices_buffer.create();
     indices_buffer.bind(core::gl::element_array_buffer);
-    indices_buffer.data(core::base::buffer_data::create_from_buffer(indices), core::gl::static_draw);
+    indices_buffer.data(core::base::buffer_data::create_from(indices), core::gl::static_draw);
 
-    vertex_array.attribute({ 0, 3, core::gl::type_float, 0 }, sizeof(core::vec3));
+    vertex_array.attribute({ 0, 3, core::gl::type_float, 0 }, sizeof(core::math::vec3));
 
     core::gl::Pipeline::enable(core::gl::depth_test);
     core::gl::Pipeline::enable(core::gl::multisample);
 
-    constexpr core::rgb color { 0.8, 0.4, 0.2 };
+    constexpr core::math::rgb color { 0.8, 0.4, 0.2 };
 
     while (window.is_active())
     {

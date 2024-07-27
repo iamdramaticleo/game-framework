@@ -9,14 +9,15 @@
 #include <opengl/macros.hpp>
 #include <opengl/shader.hpp>
 
+#include <math/vec3.hpp>
+#include <math/rgb.hpp>
+
+#include <data/camera.hpp>
 #include <data/light.hpp>
 
 #include <geometry.hpp>
 #include <file.hpp>
 #include <time.hpp>
-
-#include <vec3.hpp>
-#include <rgb.hpp>
 
 int32_t main()
 {
@@ -28,11 +29,11 @@ int32_t main()
     const auto vert_stage_data = core::File::read("diffuse_vert.spv", std::ios::binary);
     const auto frag_stage_data = core::File::read("diffuse_frag.spv", std::ios::binary);
 
-    core::gl::ShaderStage vert_stage { core::gl::vertex_shader };
+    core::gl::Stage vert_stage { core::gl::vertex_shader };
     vert_stage.create();
     vert_stage.source(vert_stage_data);
 
-    core::gl::ShaderStage frag_stage { core::gl::fragment_shader };
+    core::gl::Stage frag_stage { core::gl::fragment_shader };
     frag_stage.create();
     frag_stage.source(frag_stage_data);
 
@@ -54,37 +55,37 @@ int32_t main()
     core::gl::Buffer vertices_buffer;
     vertices_buffer.create();
     vertices_buffer.bind(core::gl::array_buffer);
-    vertices_buffer.data(core::base::buffer_data::create_from_buffer(vertices), core::gl::static_draw);
+    vertices_buffer.data(core::base::buffer_data::create_from(vertices), core::gl::static_draw);
 
     core::gl::Buffer indices_buffer;
     indices_buffer.create();
     indices_buffer.bind(core::gl::element_array_buffer);
-    indices_buffer.data(core::base::buffer_data::create_from_buffer(indices), core::gl::static_draw);
+    indices_buffer.data(core::base::buffer_data::create_from(indices), core::gl::static_draw);
 
-    vertex_array.attribute({ 0, 3, core::gl::type_float, 0 },                  core::tools::vertex_size);
-    vertex_array.attribute({ 1, 3, core::gl::type_float, sizeof(core::vec3) }, core::tools::vertex_size);
+    vertex_array.attribute({ 0, 3, core::gl::type_float, 0 },                        core::tools::vertex_size);
+    vertex_array.attribute({ 1, 3, core::gl::type_float, sizeof(core::math::vec3) }, core::tools::vertex_size);
 
     core::gl::Pipeline::enable(core::gl::depth_test);
     core::gl::Pipeline::enable(core::gl::multisample);
 
-    const std::vector camera_matrices
+    const core::data::camera camera
     {
         glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, -3.0f }),
         glm::perspective(glm::radians(45.0f), static_cast<float>(window.width()) /
-                                                               static_cast<float>(window.height()), 0.1f, 100.0f)
+                                                                   static_cast<float>(window.height()), 0.1f, 100.0f)
     };
 
     core::gl::Buffer camera_ubo;
     camera_ubo.create();
     camera_ubo.bind(core::base::buffer_location::camera);
-    camera_ubo.data(core::base::buffer_data::create_from_buffer(camera_matrices), core::gl::static_draw);
+    camera_ubo.data(core::base::buffer_data::create_from(&camera), core::gl::static_draw);
 
-    constexpr core::rgb color { 0.2, 0.2, 0.9 };
+    constexpr core::math::rgb color { 0.2, 0.2, 0.9 };
 
     core::gl::Buffer material_ubo;
     material_ubo.create();
     material_ubo.bind(core::base::buffer_location::material);
-    material_ubo.data(core::base::buffer_data::create_from_data(&color), core::gl::static_draw);
+    material_ubo.data(core::base::buffer_data::create_from(&color), core::gl::static_draw);
 
     constexpr core::data::light light
     {
@@ -95,7 +96,7 @@ int32_t main()
     core::gl::Buffer light_ubo;
     light_ubo.create();
     light_ubo.bind(core::base::buffer_location::light);
-    light_ubo.data(core::base::buffer_data::create_from_data(&light), core::gl::static_draw);
+    light_ubo.data(core::base::buffer_data::create_from(&light), core::gl::static_draw);
 
     core::Time time;
     time.init();

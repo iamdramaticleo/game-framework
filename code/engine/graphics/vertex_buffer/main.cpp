@@ -8,7 +8,7 @@
 #include <opengl/functions.hpp>
 #include <opengl/macros.hpp>
 
-#include <vec3.hpp>
+#include <math/vec3.hpp>
 
 int32_t main()
 {
@@ -17,7 +17,7 @@ int32_t main()
 
     core::gl::Functions::load();
 
-    const std::vector<core::vec3> vertices
+    const std::vector<core::math::vec3> vertices
     {
         { -0.5f, -0.5f, 0.0f },
         {  0.5f, -0.5f, 0.0f },
@@ -31,9 +31,9 @@ int32_t main()
     core::gl::Buffer vertices_buffer;
     vertices_buffer.create();
     vertices_buffer.bind(core::gl::array_buffer);
-    vertices_buffer.data(core::base::buffer_data::create_from_buffer(vertices), core::gl::static_draw);
+    vertices_buffer.data(core::base::buffer_data::create_from(vertices), core::gl::static_draw);
 
-    vertex_array.attribute({ 0, 3, core::gl::type_float, 0 }, sizeof(core::vec3));
+    vertex_array.attribute({ 0, 3, core::gl::type_float, 0 }, sizeof(core::math::vec3));
 
     core::gl::Pipeline::enable(core::gl::depth_test);
     core::gl::Pipeline::enable(core::gl::multisample);
