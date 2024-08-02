@@ -9,7 +9,7 @@
 int32_t main()
 {
     auto& window = core::WindowInstance::instance();
-     window.create(core::PlatformModule::create_factory(), { "window", 1024, 768 });
+    window.create(core::PlatformModule::create_factory(), { "window", 1024, 768 });
 
     core::gl::Functions::load();
 

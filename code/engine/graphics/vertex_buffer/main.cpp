@@ -13,9 +13,12 @@
 int32_t main()
 {
     auto& window = core::WindowInstance::instance();
-     window.create(core::PlatformModule::create_factory(), { "vertex buffer", 1024, 768 });
+    window.create(core::PlatformModule::create_factory(), { "vertex buffer", 1024, 768 });
 
     core::gl::Functions::load();
+
+    core::gl::Pipeline::enable(core::gl::depth_test);
+    core::gl::Pipeline::enable(core::gl::multisample);
 
     const std::vector<core::math::vec3> vertices
     {
@@ -34,9 +37,6 @@ int32_t main()
     vertices_buffer.data(core::base::buffer_data::create_from(vertices), core::gl::static_draw);
 
     vertex_array.attribute({ 0, 3, core::gl::type_float, 0 }, sizeof(core::math::vec3));
-
-    core::gl::Pipeline::enable(core::gl::depth_test);
-    core::gl::Pipeline::enable(core::gl::multisample);
 
     while (window.is_active())
     {

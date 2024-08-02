@@ -18,9 +18,12 @@
 int32_t main()
 {
     auto& window = core::WindowInstance::instance();
-     window.create(core::PlatformModule::create_factory(), { "index buffer", 1024, 768 });
+    window.create(core::PlatformModule::create_factory(), { "index buffer", 1024, 768 });
 
     core::gl::Functions::load();
+
+    core::gl::Pipeline::enable(core::gl::depth_test);
+    core::gl::Pipeline::enable(core::gl::multisample);
 
     const auto vert_stage_data = core::File::read("diffuse_vert.spv", std::ios::binary);
     const auto frag_stage_data = core::File::read("diffuse_frag.spv", std::ios::binary);
@@ -59,9 +62,6 @@ int32_t main()
     indices_buffer.data(core::base::buffer_data::create_from(indices), core::gl::static_draw);
 
     vertex_array.attribute({ 0, 3, core::gl::type_float, 0 }, sizeof(core::math::vec3));
-
-    core::gl::Pipeline::enable(core::gl::depth_test);
-    core::gl::Pipeline::enable(core::gl::multisample);
 
     constexpr core::math::rgb color { 0.8, 0.4, 0.2 };
 

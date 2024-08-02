@@ -22,9 +22,12 @@
 int32_t main()
 {
     auto& window = core::WindowInstance::instance();
-     window.create(core::PlatformModule::create_factory(), { "diffuse lighting", 1024, 768 });
+    window.create(core::PlatformModule::create_factory(), { "diffuse lighting", 1024, 768 });
 
     core::gl::Functions::load();
+
+    core::gl::Pipeline::enable(core::gl::depth_test);
+    core::gl::Pipeline::enable(core::gl::multisample);
 
     const auto vert_stage_data = core::File::read("diffuse_vert.spv", std::ios::binary);
     const auto frag_stage_data = core::File::read("diffuse_frag.spv", std::ios::binary);
@@ -64,9 +67,6 @@ int32_t main()
 
     vertex_array.attribute({ 0, 3, core::gl::type_float, 0 },                        core::tools::vertex_size);
     vertex_array.attribute({ 1, 3, core::gl::type_float, sizeof(core::math::vec3) }, core::tools::vertex_size);
-
-    core::gl::Pipeline::enable(core::gl::depth_test);
-    core::gl::Pipeline::enable(core::gl::multisample);
 
     const core::data::camera camera
     {

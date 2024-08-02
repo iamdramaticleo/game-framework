@@ -17,7 +17,7 @@ enum input_actions
 int32_t main()
 {
     auto& window = core::WindowInstance::instance();
-     window.create(core::PlatformModule::create_factory(), { "input", 1024, 768 });
+    window.create(core::PlatformModule::create_factory(), { "input", 1024, 768 });
 
     core::gl::Functions::load();
 
@@ -28,10 +28,12 @@ int32_t main()
     input_manager.SetDisplaySize(window.width(), window.height());
 
     const gainput::DeviceId keyboard_id = input_manager.CreateDevice<gainput::InputDeviceKeyboard>();
+    const gainput::DeviceId mouse_id = input_manager.CreateDevice<gainput::InputDeviceMouse>();
 
     gainput::InputMap input_map(input_manager);
     input_map.MapBool(close, keyboard_id, gainput::KeyEscape);
     input_map.MapBool(close, keyboard_id, gainput::KeySpace);
+    input_map.MapBool(close, mouse_id, gainput::MouseButtonRight);
 
     while (window.is_active())
     {
