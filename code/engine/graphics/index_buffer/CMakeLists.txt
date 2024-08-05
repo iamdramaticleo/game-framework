@@ -8,7 +8,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG 
 #=======================================================================================================================
 target_link_libraries(${PROJECT_NAME}    PRIVATE tools)
 #=======================================================================================================================
-target_link_libraries(${PROJECT_NAME}    PRIVATE platform graphics resources core)
+target_link_libraries(${PROJECT_NAME}    PRIVATE platform graphics core)
 target_compile_features(${PROJECT_NAME}  PRIVATE cxx_std_23)
 target_sources(${PROJECT_NAME}           PRIVATE main.cpp)
 #=======================================================================================================================
